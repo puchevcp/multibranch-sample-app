@@ -4,18 +4,20 @@ pipeline {
     buildDiscarder(logRotator(numToKeepStr: '5'))
   }
   stages {
-    stage('Build') {
+    stage('hello') {
       steps {
-        sh './gradlew clean check --no-daemon'
+        echo "hello"
       }
     }
-  }
-  post {
-    always {
-        junit(
-          allowEmptyResults: true, 
-          testResults: '**/build/test-results/test/*.xml'
-        )
+    stage('cat README') {
+     when {
+       branch "fix-*"
+     }
+     steps {
+      sh '''
+        cat README.md
+      '''
+     }
     }
   }
 }
